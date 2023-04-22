@@ -1,0 +1,10 @@
+database:
+  name: VkNews
+  host: localhost:3306
+  user: root
+  password: test
+
+vk:
+  group-id: -123456
+  application-id: -123456
+  application-token: token

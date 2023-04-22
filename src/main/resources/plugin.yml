@@ -1,0 +1,6 @@
+name: VkNews
+main: ru.dargen.news.VkNewsPlugin
+version: 1.0.0
+
+commands:
+  news: {}

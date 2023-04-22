@@ -1,0 +1,46 @@
+package ru.dargen.news.vk;
+
+import com.vk.api.sdk.client.VkApiClient;
+import com.vk.api.sdk.client.actors.ServiceActor;
+import com.vk.api.sdk.httpclient.HttpTransportClient;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.val;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import ru.dargen.news.VkNewsPlugin;
+
+@Getter
+public class VkNewsHolder {
+
+    private VkNews lastNews;
+
+    private final int groupId;
+    private final VkApiClient client;
+    private final ServiceActor actor;
+
+    public VkNewsHolder(VkNewsPlugin plugin, ConfigurationSection config) {
+        config = config.getConfigurationSection("vk");
+
+        groupId = config.getInt("group-id");
+
+        client = new VkApiClient(new HttpTransportClient());
+        actor = new ServiceActor(config.getInt("application-id"), config.getString("application-token"));
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::fetchNews, 0, 20 * 60);
+    }
+
+    @SneakyThrows
+    private void fetchNews() {
+        val well = client.wall().get(actor).count(1).offset(1).ownerId(groupId).execute().getItems();
+        if (!well.isEmpty()) {
+            val rawNews = well.get(0);
+            lastNews = new VkNews(rawNews.getId(), rawNews.getText());
+        }
+    }
+
+    public boolean hasNews() {
+        return lastNews != null;
+    }
+
+}
