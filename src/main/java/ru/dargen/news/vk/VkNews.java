@@ -12,10 +12,10 @@ import ru.dargen.news.util.BookUtil;
 @Data
 public class VkNews {
 
-    protected final int id;
-    protected final String content;
+    private final int id;
+    private final String content;
 
-    protected ItemStack book;
+    private final ItemStack book;
 
     public VkNews(int id, String content) {
         this.id = id;

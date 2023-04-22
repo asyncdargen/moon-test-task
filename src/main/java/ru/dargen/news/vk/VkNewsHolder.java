@@ -10,9 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.dargen.news.VkNewsPlugin;
 
-@Getter
 public class VkNewsHolder {
 
+    @Getter
     private VkNews lastNews;
 
     private final int groupId;
@@ -32,9 +32,13 @@ public class VkNewsHolder {
 
     @SneakyThrows
     private void fetchNews() {
-        val well = client.wall().get(actor).count(1).offset(1).ownerId(groupId).execute().getItems();
-        if (!well.isEmpty()) {
-            val rawNews = well.get(0);
+        val wall = client.wall()
+                .get(actor).ownerId(groupId)
+                .count(1).offset(1)
+                .execute().getItems();
+
+        if (!wall.isEmpty()) {
+            val rawNews = wall.get(0);
             lastNews = new VkNews(rawNews.getId(), rawNews.getText());
         }
     }
